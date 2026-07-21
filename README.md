@@ -22,9 +22,9 @@ Open http://localhost:3000 om het resultaat te bekijken.
   per hoofdstuk.
 - `content/docs/rechtspraak.mdx` — hoe strafzaken worden afgehandeld en de
   rol van advocaten.
-- `content/docs/kosten`, `belastingen.mdx`, `notam.mdx` — gepubliceerd met
-  duidelijke TODO-callouts en voorbeeldbedragen; vervang deze zodra de
-  echte tarieven bekend zijn.
+- `content/docs/financien` (Kosten + Belastingen) en `notam.mdx` —
+  gepubliceerd met duidelijke TODO-callouts en voorbeeldbedragen; vervang
+  deze zodra de echte tarieven bekend zijn.
 - `src/lib/shared.ts` — sitenaam, GitHub-repo en Discord-link op één plek.
 
 ## Publiceren
