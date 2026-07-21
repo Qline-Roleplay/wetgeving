@@ -14,7 +14,7 @@ export function WetTable({ wet }: { wet: WetKey }) {
       </thead>
       <tbody>
         {rows.map((entry) => (
-          <tr key={entry.id}>
+          <tr key={entry.id} id={entry.id} className="scroll-mt-24 target:bg-fd-primary/10">
             <td>{entry.feit}</td>
             <td>{entry.artikel}</td>
             <td>{formatStraf(entry.straf)}</td>

@@ -9,6 +9,17 @@ export const WETTEN: Record<WetKey, string> = {
   sr: 'Wetboek van Strafrecht (Sr.)',
 };
 
+// Welke /wetboek/... pagina elke wet rendert — gebruikt om stabiele
+// kruisverwijzingen (bijv. vanuit de APV) naar een specifieke rij te bouwen.
+export const WET_SLUGS: Record<WetKey, string> = {
+  bw: '/wetboek/burgerlijk-wetboek',
+  opw: '/wetboek/opiumwet',
+  gw: '/wetboek/gemeentewet',
+  wvw: '/wetboek/wegenverkeerswet',
+  wwm: '/wetboek/wet-wapens-en-munitie',
+  sr: '/wetboek/wetboek-van-strafrecht',
+};
+
 export type StrafValue =
   | { kind: 'maanden'; maanden: number }
   | { kind: 'taken'; taken: number }
@@ -112,4 +123,31 @@ export function formatStraf(straf: StrafValue): string {
     case 'factor':
       return straf.label;
   }
+}
+
+const ENTRIES_BY_ID = new Map(WETBOEK_ENTRIES.map((entry) => [entry.id, entry]));
+
+// Deep link to one specific row in a wettabel. Throws at build time (rather
+// than silently rendering a dead link) if `id` was renamed or removed — so a
+// stale cross-reference fails the build instead of shipping broken.
+export function getWetboekEntryHref(id: string): string {
+  const entry = ENTRIES_BY_ID.get(id);
+  if (!entry) {
+    throw new Error(
+      `Onbekende wetboek-verwijzing "${id}" — controleer of het id nog bestaat in src/lib/wetboek-data.ts.`,
+    );
+  }
+  // Trailing slash before the hash matches next.config's trailingSlash
+  // export so this resolves without an extra redirect hop on GitHub Pages.
+  return `${WET_SLUGS[entry.wet]}/#${entry.id}`;
+}
+
+export function getWetboekEntryLabel(id: string): string {
+  const entry = ENTRIES_BY_ID.get(id);
+  if (!entry) {
+    throw new Error(
+      `Onbekende wetboek-verwijzing "${id}" — controleer of het id nog bestaat in src/lib/wetboek-data.ts.`,
+    );
+  }
+  return entry.feit;
 }

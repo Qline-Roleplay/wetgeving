@@ -5,6 +5,7 @@ import { WetTable } from './wet-table';
 import { Strafcalculator } from './strafcalculator';
 import { BoeteTable } from './boete-table';
 import { Boetecalculator } from './boetecalculator';
+import { ZieOokWetboek } from './zie-ook-wetboek';
 import type { MDXComponents } from 'mdx/types';
 
 export function getMDXComponents(components?: MDXComponents) {
@@ -18,6 +19,7 @@ export function getMDXComponents(components?: MDXComponents) {
     Strafcalculator,
     BoeteTable,
     Boetecalculator,
+    ZieOokWetboek,
     ...components,
   } satisfies MDXComponents;
 }
