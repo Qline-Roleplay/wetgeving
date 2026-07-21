@@ -12,9 +12,13 @@ export const WETTEN: Record<WetKey, string> = {
 export type StrafValue =
   | { kind: 'maanden'; maanden: number }
   | { kind: 'taken'; taken: number }
-  | { kind: 'maanden_of_taken'; maanden: number; taken: number }
-  // Multipliers, formules en andere niet op te tellen strafmaten.
-  | { kind: 'special'; label: string };
+  // Agent kiest tussen een vast aantal maanden of taken. Is `taken` niet
+  // gegeven, dan is het aantal taken niet vastgelegd en vult de agent dit
+  // zelf in bij het gebruik van de calculator.
+  | { kind: 'keuze'; maanden: number; taken?: number }
+  // Vermenigvuldigingsfactor die pas een concreet aantal maanden oplevert
+  // zodra de agent een waarde invult (bijv. het aantal openstaande boetes).
+  | { kind: 'factor'; label: string; factor: number; inputLabel: string };
 
 export interface StrafEntry {
   id: string;
@@ -38,17 +42,17 @@ export const WETBOEK_ENTRIES: StrafEntry[] = [
   { id: 'opw-ingredienten', feit: 'Simultaan bezit van 3 of meer ingrediënten voor productie soft- en harddrugs', wet: 'opw', artikel: 'Art. 3 Opw.', straf: { kind: 'maanden', maanden: 5 } },
 
   // Gemeentewet Qline (GW.)
-  { id: 'gw-openstaande-boetes', feit: 'Het meer dan €30.000 aan boetes open hebben staan', wet: 'gw', artikel: 'Art. 3 GW.', straf: { kind: 'special', label: 'Aantal boetes × 0,6' } },
-  { id: 'gw-vluchten', feit: 'Het vluchten voor de politie', wet: 'gw', artikel: 'Art. 1 GW.', straf: { kind: 'maanden_of_taken', maanden: 5, taken: 14 } },
-  { id: 'gw-hinderen-achtervolging', feit: 'Hinderen van politie tijdens achtervolging', wet: 'gw', artikel: 'Art. 2 GW.', straf: { kind: 'maanden_of_taken', maanden: 4, taken: 12 } },
+  { id: 'gw-openstaande-boetes', feit: 'Het meer dan €30.000 aan boetes open hebben staan', wet: 'gw', artikel: 'Art. 3 GW.', straf: { kind: 'factor', label: 'Aantal boetes × 0,6', factor: 0.6, inputLabel: 'Aantal openstaande boetes' } },
+  { id: 'gw-vluchten', feit: 'Het vluchten voor de politie', wet: 'gw', artikel: 'Art. 1 GW.', straf: { kind: 'keuze', maanden: 5, taken: 14 } },
+  { id: 'gw-hinderen-achtervolging', feit: 'Hinderen van politie tijdens achtervolging', wet: 'gw', artikel: 'Art. 2 GW.', straf: { kind: 'keuze', maanden: 4, taken: 12 } },
 
   // Wegenverkeerswet (WVW.)
-  { id: 'wvw-weigeren-stopbevel', feit: 'Weigeren van een bevel tot stoppen', wet: 'wvw', artikel: 'Art. 5 WVW.', straf: { kind: 'special', label: '3 maanden of taken' } },
+  { id: 'wvw-weigeren-stopbevel', feit: 'Weigeren van een bevel tot stoppen', wet: 'wvw', artikel: 'Art. 5 WVW.', straf: { kind: 'keuze', maanden: 3 } },
   { id: 'wvw-zonder-rijbewijs', feit: 'Rijden zonder geldig rijbewijs', wet: 'wvw', artikel: 'Art. 9 WVW.', straf: { kind: 'taken', taken: 20 } },
-  { id: 'wvw-onder-invloed', feit: 'Rijden onder invloed van verdovende middelen', wet: 'wvw', artikel: 'Art. 8 WVW.', straf: { kind: 'special', label: '4 maanden of taken' } },
-  { id: 'wvw-zonder-rijbewijs-3x', feit: 'Rijden zonder geldig rijbewijs (na 3x aanspreken)', wet: 'wvw', artikel: 'Art. 107 WVW.', straf: { kind: 'special', label: '7 maanden of taken' } },
-  { id: 'wvw-ongeval-veroorzaken', feit: 'Verkeersongeval veroorzaken', wet: 'wvw', artikel: 'Art. 6 WVW.', straf: { kind: 'special', label: '9 maanden of taken' } },
-  { id: 'wvw-verlaten-plaats-ongeval', feit: 'Verlaten plaats ongeval', wet: 'wvw', artikel: 'Art. 7 WVW.', straf: { kind: 'special', label: '4 maanden of taken' } },
+  { id: 'wvw-onder-invloed', feit: 'Rijden onder invloed van verdovende middelen', wet: 'wvw', artikel: 'Art. 8 WVW.', straf: { kind: 'keuze', maanden: 4 } },
+  { id: 'wvw-zonder-rijbewijs-3x', feit: 'Rijden zonder geldig rijbewijs (na 3x aanspreken)', wet: 'wvw', artikel: 'Art. 107 WVW.', straf: { kind: 'keuze', maanden: 7 } },
+  { id: 'wvw-ongeval-veroorzaken', feit: 'Verkeersongeval veroorzaken', wet: 'wvw', artikel: 'Art. 6 WVW.', straf: { kind: 'keuze', maanden: 9 } },
+  { id: 'wvw-verlaten-plaats-ongeval', feit: 'Verlaten plaats ongeval', wet: 'wvw', artikel: 'Art. 7 WVW.', straf: { kind: 'keuze', maanden: 4 } },
 
   // Wet Wapens en Munitie (WWM.)
   { id: 'wwm-steekwapen', feit: 'Het in bezit hebben van een (steek)wapen', wet: 'wwm', artikel: 'Art. 13 WWM.', straf: { kind: 'maanden', maanden: 7 } },
@@ -87,7 +91,7 @@ export const WETBOEK_ENTRIES: StrafEntry[] = [
   { id: 'sr-plofkraak', feit: 'Plegen van een plofkraak', wet: 'sr', artikel: 'Art. 311 Sr.', straf: { kind: 'maanden', maanden: 7 } },
   { id: 'sr-poging-doodslag', feit: 'Poging tot doodslag', wet: 'sr', artikel: 'Art. 45 & 287 Sr.', straf: { kind: 'maanden', maanden: 7 } },
   { id: 'sr-poging-doodslag-ambtenaar', feit: 'Poging tot doodslag op een ambtenaar in functie', wet: 'sr', artikel: 'Art. 45 & 287 Sr.', straf: { kind: 'maanden', maanden: 9 } },
-  { id: 'sr-poging-misdrijf', feit: 'Poging tot het plegen van een misdrijf', wet: 'sr', artikel: 'Art. 45 Sr.', straf: { kind: 'special', label: 'Strafeis × 0,5' } },
+  { id: 'sr-poging-misdrijf', feit: 'Poging tot het plegen van een misdrijf', wet: 'sr', artikel: 'Art. 45 Sr.', straf: { kind: 'factor', label: 'Strafeis × 0,5', factor: 0.5, inputLabel: 'Strafeis (in maanden)' } },
   { id: 'sr-poging-moord', feit: 'Poging tot moord', wet: 'sr', artikel: 'Art. 45 & 289 Sr.', straf: { kind: 'maanden', maanden: 10 } },
   { id: 'sr-smaad', feit: 'Smaad', wet: 'sr', artikel: 'Art. 261 Sr.', straf: { kind: 'maanden', maanden: 4 } },
   { id: 'sr-vandalisme', feit: 'Vandalisme', wet: 'sr', artikel: 'Art. 350 Sr.', straf: { kind: 'taken', taken: 13 } },
@@ -101,9 +105,11 @@ export function formatStraf(straf: StrafValue): string {
       return `${straf.maanden} maanden`;
     case 'taken':
       return `${straf.taken} taken`;
-    case 'maanden_of_taken':
-      return `${straf.maanden} maanden of ${straf.taken} taken`;
-    case 'special':
+    case 'keuze':
+      return straf.taken !== undefined
+        ? `${straf.maanden} maanden of ${straf.taken} taken`
+        : `${straf.maanden} maanden of taken`;
+    case 'factor':
       return straf.label;
   }
 }

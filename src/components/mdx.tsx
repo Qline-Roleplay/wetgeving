@@ -3,6 +3,8 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { CategorieBadge, Strafmaat } from './strafmaat';
 import { WetTable } from './wet-table';
 import { Strafcalculator } from './strafcalculator';
+import { BoeteTable } from './boete-table';
+import { Boetecalculator } from './boetecalculator';
 import type { MDXComponents } from 'mdx/types';
 
 export function getMDXComponents(components?: MDXComponents) {
@@ -14,6 +16,8 @@ export function getMDXComponents(components?: MDXComponents) {
     CategorieBadge,
     WetTable,
     Strafcalculator,
+    BoeteTable,
+    Boetecalculator,
     ...components,
   } satisfies MDXComponents;
 }

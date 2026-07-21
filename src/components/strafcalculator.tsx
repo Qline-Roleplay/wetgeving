@@ -3,11 +3,19 @@
 import { useMemo, useState } from 'react';
 import { WETBOEK_ENTRIES, WETTEN, formatStraf, type WetKey } from '@/lib/wetboek-data';
 
+function parseNumber(raw: string | undefined): number | null {
+  if (!raw) return null;
+  const parsed = Number.parseFloat(raw.replace(',', '.'));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
 export function Strafcalculator() {
   const [query, setQuery] = useState('');
   const [wetFilter, setWetFilter] = useState<WetKey | 'alle'>('alle');
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [altChoice, setAltChoice] = useState<Record<string, 'maanden' | 'taken'>>({});
+  const [takenInputs, setTakenInputs] = useState<Record<string, string>>({});
+  const [factorInputs, setFactorInputs] = useState<Record<string, string>>({});
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -26,7 +34,7 @@ export function Strafcalculator() {
     let maanden = 0;
     let taken = 0;
     let count = 0;
-    const bijzonder: { feit: string; label: string }[] = [];
+    const incomplete: { feit: string; message: string }[] = [];
 
     for (const entry of WETBOEK_ENTRIES) {
       if (!selected[entry.id]) continue;
@@ -37,19 +45,26 @@ export function Strafcalculator() {
         maanden += straf.maanden;
       } else if (straf.kind === 'taken') {
         taken += straf.taken;
-      } else if (straf.kind === 'maanden_of_taken') {
-        if ((altChoice[entry.id] ?? 'maanden') === 'maanden') {
+      } else if (straf.kind === 'keuze') {
+        const choice = altChoice[entry.id] ?? 'maanden';
+        if (choice === 'maanden') {
           maanden += straf.maanden;
-        } else {
+        } else if (straf.taken !== undefined) {
           taken += straf.taken;
+        } else {
+          const parsed = parseNumber(takenInputs[entry.id]);
+          if (parsed !== null) taken += Math.round(parsed);
+          else incomplete.push({ feit: entry.feit, message: 'Vul het aantal taken in' });
         }
       } else {
-        bijzonder.push({ feit: entry.feit, label: straf.label });
+        const parsed = parseNumber(factorInputs[entry.id]);
+        if (parsed !== null) maanden += Math.round(straf.factor * parsed);
+        else incomplete.push({ feit: entry.feit, message: `Vul ${straf.inputLabel.toLowerCase()} in` });
       }
     }
 
-    return { maanden, taken, count, bijzonder };
-  }, [selected, altChoice]);
+    return { maanden, taken, count, incomplete };
+  }, [selected, altChoice, takenInputs, factorInputs]);
 
   function toggle(id: string) {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -58,6 +73,8 @@ export function Strafcalculator() {
   function reset() {
     setSelected({});
     setAltChoice({});
+    setTakenInputs({});
+    setFactorInputs({});
   }
 
   return (
@@ -85,28 +102,32 @@ export function Strafcalculator() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_280px] lg:items-start">
-        <div className="max-h-[28rem] overflow-y-auto rounded-lg border">
+        <div className="max-h-[32rem] overflow-y-auto rounded-lg border">
           <ul className="divide-y">
             {filtered.map((entry) => {
               const isSelected = !!selected[entry.id];
+              const straf = entry.straf;
 
               return (
-                <li key={entry.id} className="flex flex-wrap items-center gap-3 px-4 py-3 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggle(entry.id)}
-                    className="size-4 shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium">{entry.feit}</div>
-                    <div className="text-xs text-fd-muted-foreground">
-                      {WETTEN[entry.wet]} — {entry.artikel}
+                <li key={entry.id} className="flex flex-col gap-2 px-4 py-3 text-sm">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggle(entry.id)}
+                      className="size-4 shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium">{entry.feit}</div>
+                      <div className="text-xs text-fd-muted-foreground">
+                        {WETTEN[entry.wet]} — {entry.artikel}
+                      </div>
                     </div>
+                    <div className="whitespace-nowrap text-xs font-medium">{formatStraf(straf)}</div>
                   </div>
-                  <div className="whitespace-nowrap text-xs font-medium">{formatStraf(entry.straf)}</div>
-                  {isSelected && entry.straf.kind === 'maanden_of_taken' ? (
-                    <div className="flex gap-3 text-xs text-fd-muted-foreground">
+
+                  {isSelected && straf.kind === 'keuze' ? (
+                    <div className="ml-7 flex flex-wrap items-center gap-3 text-xs text-fd-muted-foreground">
                       <label className="flex items-center gap-1">
                         <input
                           type="radio"
@@ -114,7 +135,7 @@ export function Strafcalculator() {
                           checked={(altChoice[entry.id] ?? 'maanden') === 'maanden'}
                           onChange={() => setAltChoice((prev) => ({ ...prev, [entry.id]: 'maanden' }))}
                         />
-                        Maanden
+                        {straf.maanden} maanden
                       </label>
                       <label className="flex items-center gap-1">
                         <input
@@ -123,8 +144,43 @@ export function Strafcalculator() {
                           checked={altChoice[entry.id] === 'taken'}
                           onChange={() => setAltChoice((prev) => ({ ...prev, [entry.id]: 'taken' }))}
                         />
-                        Taken
+                        {straf.taken !== undefined ? `${straf.taken} taken` : 'taken'}
                       </label>
+                      {altChoice[entry.id] === 'taken' && straf.taken === undefined ? (
+                        <input
+                          type="number"
+                          min={0}
+                          value={takenInputs[entry.id] ?? ''}
+                          onChange={(e) => setTakenInputs((prev) => ({ ...prev, [entry.id]: e.target.value }))}
+                          placeholder="aantal taken"
+                          className="w-24 rounded-md border bg-fd-background px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-fd-ring"
+                        />
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  {isSelected && straf.kind === 'factor' ? (
+                    <div className="ml-7 flex flex-wrap items-center gap-2 text-xs text-fd-muted-foreground">
+                      <label className="flex items-center gap-2">
+                        {straf.inputLabel}
+                        <input
+                          type="number"
+                          min={0}
+                          value={factorInputs[entry.id] ?? ''}
+                          onChange={(e) => setFactorInputs((prev) => ({ ...prev, [entry.id]: e.target.value }))}
+                          className="w-24 rounded-md border bg-fd-background px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-fd-ring"
+                        />
+                      </label>
+                      {(() => {
+                        const parsed = parseNumber(factorInputs[entry.id]);
+                        if (parsed === null) return null;
+                        const computed = straf.factor * parsed;
+                        return (
+                          <span>
+                            = {computed.toFixed(1)} → <span className="font-medium">{Math.round(computed)} maanden</span>
+                          </span>
+                        );
+                      })()}
                     </div>
                   ) : null}
                 </li>
@@ -161,13 +217,13 @@ export function Strafcalculator() {
               <dd className="font-medium">{totals.taken} taken</dd>
             </div>
           </dl>
-          {totals.bijzonder.length > 0 ? (
+          {totals.incomplete.length > 0 ? (
             <div className="mt-4 border-t pt-3">
-              <p className="mb-2 text-xs font-medium text-fd-muted-foreground">Niet automatisch meegeteld:</p>
-              <ul className="space-y-1 text-xs">
-                {totals.bijzonder.map((item, index) => (
+              <p className="mb-2 text-xs font-medium text-amber-600 dark:text-amber-400">Nog in te vullen:</p>
+              <ul className="space-y-1 text-xs text-fd-muted-foreground">
+                {totals.incomplete.map((item, index) => (
                   <li key={index}>
-                    <span className="font-medium">{item.feit}:</span> {item.label}
+                    <span className="font-medium text-fd-foreground">{item.feit}:</span> {item.message}
                   </li>
                 ))}
               </ul>
