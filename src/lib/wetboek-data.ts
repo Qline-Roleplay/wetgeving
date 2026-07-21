@@ -125,6 +125,23 @@ export function formatStraf(straf: StrafValue): string {
   }
 }
 
+// Rough severity ballpark for the sortable Strafmaat column — mixes maanden
+// and taken on one numeric scale, which isn't a precise equivalence, but is
+// good enough for "roughly ascending/descending". Factor entries have no
+// fixed number until filled in, so they sort to the end.
+export function strafSortValue(straf: StrafValue): number {
+  switch (straf.kind) {
+    case 'maanden':
+      return straf.maanden;
+    case 'taken':
+      return straf.taken;
+    case 'keuze':
+      return straf.maanden;
+    case 'factor':
+      return Number.POSITIVE_INFINITY;
+  }
+}
+
 const ENTRIES_BY_ID = new Map(WETBOEK_ENTRIES.map((entry) => [entry.id, entry]));
 
 // Deep link to one specific row in a wettabel. Throws at build time (rather

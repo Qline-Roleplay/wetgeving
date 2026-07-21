@@ -42,6 +42,11 @@ export const BOETES_ENTRIES: BoeteEntry[] = [
   { id: 'boete-voertuigwrak', overtreding: 'Voertuigwrak op de weg laten staan', bedrag: { kind: 'bedrag', bedrag: 185 } },
 ];
 
+// Uses the range's minimum as the representative value for sorting.
+export function boeteSortValue(bedrag: BoeteValue): number {
+  return bedrag.kind === 'bedrag' ? bedrag.bedrag : bedrag.min;
+}
+
 export function formatBoete(bedrag: BoeteValue): string {
   const bedragText =
     bedrag.kind === 'bedrag' ? `€${bedrag.bedrag}` : `€${bedrag.min} – €${bedrag.max}`;
