@@ -16,13 +16,15 @@ Open http://localhost:3000 om het resultaat te bekijken.
 ## Structuur
 
 - `content/docs/wetboek` — het strafrechtelijke Wetboek (BW, Opiumwet,
-  Gemeentewet, WVW, WWM, Sr en de boetetabel).
+  Gemeentewet, WVW, WWM, Sr, de boetetabel, Algemene Bepalingen,
+  strafverminderingsgronden, schadevergoeding en bewijs).
 - `content/docs/apv` — de Algemene Plaatselijke Verordening (serverregels),
   per hoofdstuk.
-- `content/kosten-draft` — een uitgewerkte "Kosten"-sectie die bewust
-  **buiten** `content/docs` staat, dus niet meegebouwd wordt. Zie
-  [content/kosten-draft/README.md](content/kosten-draft/README.md) om 'm te
-  activeren.
+- `content/docs/rechtspraak.mdx` — hoe strafzaken worden afgehandeld en de
+  rol van advocaten.
+- `content/docs/kosten`, `belastingen.mdx`, `notam.mdx` — gepubliceerd met
+  duidelijke TODO-callouts en voorbeeldbedragen; vervang deze zodra de
+  echte tarieven bekend zijn.
 - `src/lib/shared.ts` — sitenaam, GitHub-repo en Discord-link op één plek.
 
 ## Publiceren
