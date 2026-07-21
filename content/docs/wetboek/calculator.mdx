@@ -1,0 +1,23 @@
+---
+title: Strafcalculator
+description: Selecteer strafbare feiten en bereken automatisch de totale strafmaat.
+full: true
+---
+
+Vink de feiten aan die ten laste worden gelegd. De celstraf (in maanden) en
+taakstraf (in taken) worden automatisch bij elkaar opgeteld — precies zoals
+beschreven in de [toelichting](/wetboek) van dit wetboek.
+
+<Callout type="warn" title="Handmatig na te rekenen">
+  Feiten met een vermenigvuldigingsfactor (zoals "Strafeis × 0,5") of een
+  strafmaat zonder vast aantal taken kunnen niet automatisch worden
+  opgeteld. Deze verschijnen apart onder het totaal, zodat je ze zelf kunt
+  verwerken.
+</Callout>
+
+<Strafcalculator />
+
+De data in deze calculator komt rechtstreeks uit de wettabellen op deze
+site — pas je een strafmaat aan in
+[`src/lib/wetboek-data.ts`](https://github.com/Qline-Roleplay/wetgeving/blob/main/src/lib/wetboek-data.ts),
+dan werkt dat automatisch door in zowel de tabellen als de calculator.
