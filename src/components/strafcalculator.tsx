@@ -16,6 +16,7 @@ export function Strafcalculator() {
   const [altChoice, setAltChoice] = useState<Record<string, 'maanden' | 'taken'>>({});
   const [takenInputs, setTakenInputs] = useState<Record<string, string>>({});
   const [factorInputs, setFactorInputs] = useState<Record<string, string>>({});
+  const [aftrekInput, setAftrekInput] = useState('');
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -66,6 +67,9 @@ export function Strafcalculator() {
     return { maanden, taken, count, incomplete };
   }, [selected, altChoice, takenInputs, factorInputs]);
 
+  const aftrek = parseNumber(aftrekInput) ?? 0;
+  const celstrafNaAftrek = Math.max(0, totals.maanden - aftrek);
+
   function toggle(id: string) {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
   }
@@ -75,6 +79,7 @@ export function Strafcalculator() {
     setAltChoice({});
     setTakenInputs({});
     setFactorInputs({});
+    setAftrekInput('');
   }
 
   return (
@@ -217,6 +222,28 @@ export function Strafcalculator() {
               <dd className="font-medium">{totals.taken} taken</dd>
             </div>
           </dl>
+
+          <div className="mt-4 border-t pt-3">
+            <label className="flex items-center justify-between gap-2 text-sm">
+              <span className="text-fd-muted-foreground">Strafvermindering (reeds uitgezeten)</span>
+              <input
+                type="number"
+                min={0}
+                value={aftrekInput}
+                onChange={(e) => setAftrekInput(e.target.value)}
+                placeholder="0"
+                className="w-20 rounded-md border bg-fd-background px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-fd-ring"
+              />
+            </label>
+            <p className="mt-1 text-xs text-fd-muted-foreground">
+              Trekt alleen af van de celstraf, niet van de taakstraf.
+            </p>
+            <div className="mt-3 flex justify-between text-sm">
+              <dt className="font-medium">Celstraf na aftrek</dt>
+              <dd className="font-medium">{celstrafNaAftrek} maanden</dd>
+            </div>
+          </div>
+
           {totals.incomplete.length > 0 ? (
             <div className="mt-4 border-t pt-3">
               <p className="mb-2 text-xs font-medium text-amber-600 dark:text-amber-400">Nog in te vullen:</p>
