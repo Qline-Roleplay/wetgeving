@@ -26,6 +26,8 @@ export function KostenTabel({ categorie }: { categorie: KostenCategorie }) {
       entry.tiers.map((tier, index) => ({ id: `${entry.id}-${index}`, tier, eenheid: entry.eenheid })),
     );
     const eenheid = entries[0]?.eenheid ?? '';
+    const allDefinitief = entries.length > 0 && entries.every((entry) => entry.definitief);
+    const bedragLabel = allDefinitief ? `Bedrag ${eenheid}` : `Bedrag ${eenheid} (voorbeeld)`;
 
     return (
       <SortableTable<BelastingRow>
@@ -40,7 +42,7 @@ export function KostenTabel({ categorie }: { categorie: KostenCategorie }) {
           },
           {
             key: 'bedrag',
-            label: `Bedrag ${eenheid} (voorbeeld)`,
+            label: bedragLabel,
             value: (row) => row.tier.bedrag,
             render: (row) => `€ ${row.tier.bedrag}`,
           },
@@ -50,6 +52,8 @@ export function KostenTabel({ categorie }: { categorie: KostenCategorie }) {
   }
 
   const rows = KOSTEN_ENTRIES.filter(isDienstEntry).filter((entry) => entry.categorie === categorie);
+  const allDefinitief = rows.length > 0 && rows.every((entry) => entry.definitief);
+  const tariefLabel = allDefinitief ? 'Tarief' : 'Tarief (voorbeeld)';
 
   return (
     <SortableTable<DienstEntry>
@@ -59,7 +63,7 @@ export function KostenTabel({ categorie }: { categorie: KostenCategorie }) {
         { key: 'naam', label: 'Dienst', value: (entry) => entry.naam, render: (entry) => entry.naam },
         {
           key: 'tarief',
-          label: 'Tarief (voorbeeld)',
+          label: tariefLabel,
           value: (entry) => tariefSortValue(entry.tarief),
           render: (entry) => formatTarief(entry.tarief),
         },

@@ -8,8 +8,13 @@
   { "id": "kosten-pechhulp-sloop", "type": "dienst", "categorie": "pechhulp", "naam": "Voertuig ophalen uit de sloop", "tarief": { "kind": "bedrag", "bedrag": 250 }, "definitief": false },
 
   { "id": "kosten-politie-kenteken", "type": "dienst", "categorie": "politie", "naam": "Kentekenwijziging", "tarief": { "kind": "bedrag", "bedrag": 100 }, "definitief": false },
-  { "id": "kosten-politie-rijbewijs", "type": "dienst", "categorie": "politie", "naam": "Aanvraag of vervanging rijbewijs", "tarief": { "kind": "bedrag", "bedrag": 150 }, "definitief": false },
   { "id": "kosten-politie-vrijkoop", "type": "dienst", "categorie": "politie", "naam": "Vrijkoop inbeslagname voertuig", "tarief": { "kind": "bedrag", "bedrag": 500 }, "definitief": false },
+
+  { "id": "kosten-rijbewijs-theorie", "type": "dienst", "categorie": "rijbewijs", "naam": "Theorie-examen (auto of motor)", "tarief": { "kind": "bedrag", "bedrag": 350 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/types/driving.lua (price.theory) — identiek voor 'driving:car' en 'driving:motorcycle'." },
+  { "id": "kosten-rijbewijs-praktijk", "type": "dienst", "categorie": "rijbewijs", "naam": "Praktijkexamen (auto of motor)", "tarief": { "kind": "bedrag", "bedrag": 750 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/types/driving.lua (price.practical) — identiek voor 'driving:car' en 'driving:motorcycle'." },
+  { "id": "kosten-rijbewijs-uitgifte", "type": "dienst", "categorie": "rijbewijs", "naam": "Uitgifte rijbewijs (na slagen)", "tarief": { "kind": "bedrag", "bedrag": 350 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/types/driving.lua (price.license) — identiek voor 'driving:car' en 'driving:motorcycle'." },
+  { "id": "kosten-rijbewijs-vervanging", "type": "dienst", "categorie": "rijbewijs", "naam": "Vervanging kwijtgeraakt rijbewijs", "tarief": { "kind": "bedrag", "bedrag": 100 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/shared.lua (Settings.CityHall.replacementPrice)." },
+  { "id": "kosten-rijbewijs-id-kaart", "type": "dienst", "categorie": "rijbewijs", "naam": "ID-kaart", "tarief": { "kind": "bedrag", "bedrag": 250 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/shared.lua (Settings.CityHall.documents.id_card.price). Geen examen vereist." },
 
   { "id": "kosten-vliegschool-lesuur", "type": "dienst", "categorie": "vliegschool", "naam": "Lesuur", "tarief": { "kind": "bedrag", "bedrag": 200 }, "definitief": false },
   { "id": "kosten-vliegschool-examen", "type": "dienst", "categorie": "vliegschool", "naam": "Examen vliegbrevet", "tarief": { "kind": "bedrag", "bedrag": 400 }, "definitief": false },

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kosten.schema.json",
   "title": "Kosten en belastingen",
-  "description": "Tarieven voor diensten en belastingtarieven binnen Qline Roleplay. Bron voor <KostenTabel />. Alle bedragen zijn momenteel voorbeelden (definitief: false) totdat het bestuur ze vaststelt.",
+  "description": "Tarieven voor diensten en belastingtarieven binnen Qline Roleplay. Bron voor <KostenTabel />. Items met definitief: false zijn nog voorbeelden totdat het bestuur ze vaststelt; definitief: true betekent het bedrag is direct overgenomen uit de live serverconfiguratie (zie opmerking per item voor de bron).",
   "type": "array",
   "items": {
     "oneOf": [
@@ -20,7 +20,7 @@
         "type": { "const": "dienst" },
         "categorie": {
           "type": "string",
-          "enum": ["ambulance", "pechhulp", "politie", "vliegschool"]
+          "enum": ["ambulance", "pechhulp", "politie", "vliegschool", "rijbewijs"]
         },
         "naam": { "type": "string", "minLength": 1 },
         "tarief": { "$ref": "#/$defs/geldwaarde" },
