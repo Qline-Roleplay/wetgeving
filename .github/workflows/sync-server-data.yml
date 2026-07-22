@@ -37,16 +37,17 @@ jobs:
           DEST="q-base/resources/[core]/q-wetgeving-data/data"
           cp data/boetetabel.json "$DEST/boetetabel.json"
           cp data/kosten.json "$DEST/kosten.json"
+          cp data/wetboek.json "$DEST/wetboek.json"
 
       - name: Commit and push if changed
         working-directory: q-base
         run: |
           git config user.name "wetgeving-sync[bot]"
           git config user.email "wetgeving-sync@users.noreply.github.com"
-          git add "resources/[core]/q-wetgeving-data/data/boetetabel.json" "resources/[core]/q-wetgeving-data/data/kosten.json"
+          git add "resources/[core]/q-wetgeving-data/data/boetetabel.json" "resources/[core]/q-wetgeving-data/data/kosten.json" "resources/[core]/q-wetgeving-data/data/wetboek.json"
           if git diff --cached --quiet; then
             echo "No data changes to sync."
             exit 0
           fi
-          git commit -m "sync: update boetetabel/kosten data from wetgeving@${GITHUB_SHA::7}"
+          git commit -m "sync: update boetetabel/kosten/wetboek data from wetgeving@${GITHUB_SHA::7}"
           git push origin main
