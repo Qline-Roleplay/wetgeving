@@ -14,7 +14,7 @@
   { "id": "kosten-rijschool-praktijk", "type": "dienst", "categorie": "rijschool", "naam": "Praktijkexamen (auto of motor)", "tarief": { "kind": "bedrag", "bedrag": 750 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/types/driving.lua (price.practical) — identiek voor 'driving:car' en 'driving:motorcycle'." },
 
   { "id": "kosten-stadhuis-uitgifte", "type": "dienst", "categorie": "stadhuis", "naam": "Uitgifte rijbewijs (na slagen)", "tarief": { "kind": "bedrag", "bedrag": 350 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/types/driving.lua (price.license) — identiek voor 'driving:car' en 'driving:motorcycle'." },
-  { "id": "kosten-stadhuis-vervanging", "type": "dienst", "categorie": "stadhuis", "naam": "Vervanging kwijtgeraakt rijbewijs", "tarief": { "kind": "bedrag", "bedrag": 100 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/shared.lua (Settings.CityHall.replacementPrice)." },
+  { "id": "kosten-stadhuis-vervanging", "type": "dienst", "categorie": "stadhuis", "naam": "Vervanging kwijtgeraakt rijbewijs", "tarief": { "kind": "bedrag", "bedrag": 200 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/shared.lua (Settings.CityHall.replacementPrice)." },
   { "id": "kosten-stadhuis-id-kaart", "type": "dienst", "categorie": "stadhuis", "naam": "ID-kaart", "tarief": { "kind": "bedrag", "bedrag": 250 }, "definitief": true, "opmerking": "Bron: q-licenses, settings/shared.lua (Settings.CityHall.documents.id_card.price). Geen examen vereist." },
 
   { "id": "kosten-vliegschool-lesuur", "type": "dienst", "categorie": "vliegschool", "naam": "Lesuur", "tarief": { "kind": "bedrag", "bedrag": 200 }, "definitief": false },
