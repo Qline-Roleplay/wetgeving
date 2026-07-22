@@ -19,9 +19,9 @@ interface BelastingRow {
   eenheid: string;
 }
 
-export function KostenTabel({ categorie }: { categorie: KostenCategorie }) {
+export function KostenTabel({ categorie, id }: { categorie: KostenCategorie; id?: string }) {
   if (categorie === 'belasting') {
-    const entries = KOSTEN_ENTRIES.filter(isBelastingEntry);
+    const entries = KOSTEN_ENTRIES.filter(isBelastingEntry).filter((entry) => !id || entry.id === id);
     const rows: BelastingRow[] = entries.flatMap((entry) =>
       entry.tiers.map((tier, index) => ({ id: `${entry.id}-${index}`, tier, eenheid: entry.eenheid })),
     );
@@ -36,7 +36,7 @@ export function KostenTabel({ categorie }: { categorie: KostenCategorie }) {
         columns={[
           {
             key: 'aantal',
-            label: 'Aantal motorvoertuigen',
+            label: 'Aantal voertuigen',
             value: (row) => row.tier.minAantal,
             render: (row) => formatTierBereik(row.tier),
           },

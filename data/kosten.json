@@ -19,6 +19,36 @@
       { "minAantal": 20, "maxAantal": null, "bedrag": 500 }
     ],
     "definitief": false,
-    "opmerking": "Motorvoertuigenbelasting wordt geheven over motorvoertuigen die in je garage staan. Dienstvoertuigen en fietsen zijn uitgesloten."
+    "opmerking": "Motorvoertuigenbelasting wordt geheven over motorvoertuigen die in je garage staan. Dienstvoertuigen en fietsen zijn uitgesloten. Boten en luchtvaartuigen hebben een eigen tarief, zie 'Wegenbelasting (boten)' en 'Wegenbelasting (luchtvaartuigen)' hieronder."
+  },
+  {
+    "id": "belasting-wegenbelasting-boot",
+    "type": "belasting",
+    "categorie": "belasting",
+    "naam": "Wegenbelasting (boten)",
+    "eenheid": "per dag",
+    "tiers": [
+      { "minAantal": 1, "maxAantal": 4, "bedrag": 25 },
+      { "minAantal": 5, "maxAantal": 9, "bedrag": 60 },
+      { "minAantal": 10, "maxAantal": 19, "bedrag": 125 },
+      { "minAantal": 20, "maxAantal": null, "bedrag": 250 }
+    ],
+    "definitief": false,
+    "opmerking": "Geldt voor voertuigen die in een boot-garage staan. Voorbeeldbedrag: 0,5x het wegenbelasting-tarief voor motorvoertuigen, zelfde schijfindeling. Nog niet vastgesteld door het bestuur."
+  },
+  {
+    "id": "belasting-wegenbelasting-lucht",
+    "type": "belasting",
+    "categorie": "belasting",
+    "naam": "Wegenbelasting (luchtvaartuigen)",
+    "eenheid": "per dag",
+    "tiers": [
+      { "minAantal": 1, "maxAantal": 4, "bedrag": 250 },
+      { "minAantal": 5, "maxAantal": 9, "bedrag": 600 },
+      { "minAantal": 10, "maxAantal": 19, "bedrag": 1250 },
+      { "minAantal": 20, "maxAantal": null, "bedrag": 2500 }
+    ],
+    "definitief": false,
+    "opmerking": "Geldt voor vliegtuigen en helikopters die in een luchthaven-garage staan. Voorbeeldbedrag: 5x het wegenbelasting-tarief voor motorvoertuigen, zelfde schijfindeling. Nog niet vastgesteld door het bestuur."
   }
 ]
