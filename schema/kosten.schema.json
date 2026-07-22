@@ -20,7 +20,7 @@
         "type": { "const": "dienst" },
         "categorie": {
           "type": "string",
-          "enum": ["ambulance", "pechhulp", "politie", "vliegschool", "rijbewijs"]
+          "enum": ["ambulance", "pechhulp", "politie", "vliegschool", "rijschool", "stadhuis"]
         },
         "naam": { "type": "string", "minLength": 1 },
         "tarief": { "$ref": "#/$defs/geldwaarde" },
