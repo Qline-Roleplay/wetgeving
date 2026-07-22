@@ -4,7 +4,7 @@ export type Geldwaarde =
   | { kind: 'bedrag'; bedrag: number; note?: string }
   | { kind: 'bereik'; min: number; max: number; note?: string };
 
-export type KostenCategorie = 'ambulance' | 'pechhulp' | 'politie' | 'vliegschool' | 'rijschool' | 'stadhuis' | 'belasting';
+export type KostenCategorie = 'rijschool' | 'stadhuis' | 'belasting';
 
 export interface DienstEntry {
   id: string;
