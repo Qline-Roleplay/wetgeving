@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kosten.schema.json",
+  "title": "Kosten en belastingen",
+  "description": "Tarieven voor diensten en belastingtarieven binnen Qline Roleplay. Bron voor <KostenTabel />. Alle bedragen zijn momenteel voorbeelden (definitief: false) totdat het bestuur ze vaststelt.",
+  "type": "array",
+  "items": {
+    "oneOf": [
+      { "$ref": "#/$defs/dienstEntry" },
+      { "$ref": "#/$defs/belastingEntry" }
+    ]
+  },
+  "$defs": {
+    "dienstEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "categorie", "naam", "tarief", "definitief"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "type": { "const": "dienst" },
+        "categorie": {
+          "type": "string",
+          "enum": ["ambulance", "pechhulp", "politie", "vliegschool"]
+        },
+        "naam": { "type": "string", "minLength": 1 },
+        "tarief": { "$ref": "#/$defs/geldwaarde" },
+        "definitief": {
+          "type": "boolean",
+          "description": "False zolang het bedrag een voorbeeld is en nog niet is vastgesteld door het bestuur."
+        },
+        "opmerking": { "type": "string", "minLength": 1 },
+        "laatst_gewijzigd": { "type": "string", "format": "date" }
+      }
+    },
+    "belastingEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "categorie", "naam", "eenheid", "tiers", "definitief"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "type": { "const": "belasting" },
+        "categorie": { "const": "belasting" },
+        "naam": { "type": "string", "minLength": 1 },
+        "eenheid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Bijv. 'per dag' — eenheid waarop elk tier-bedrag van toepassing is."
+        },
+        "tiers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["minAantal", "maxAantal", "bedrag"],
+            "properties": {
+              "minAantal": { "type": "integer", "minimum": 0 },
+              "maxAantal": {
+                "type": ["integer", "null"],
+                "minimum": 0,
+                "description": "null betekent 'en hoger' (open bovengrens, bijv. '20+')."
+              },
+              "bedrag": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        },
+        "definitief": { "type": "boolean" },
+        "opmerking": { "type": "string", "minLength": 1 },
+        "laatst_gewijzigd": { "type": "string", "format": "date" }
+      }
+    },
+    "geldwaarde": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "bedrag"],
+          "properties": {
+            "kind": { "const": "bedrag" },
+            "bedrag": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "min", "max"],
+          "properties": {
+            "kind": { "const": "bereik" },
+            "min": { "type": "number", "exclusiveMinimum": 0 },
+            "max": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    }
+  }
+}

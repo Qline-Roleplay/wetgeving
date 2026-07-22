@@ -5,6 +5,7 @@ import { WetTable } from './wet-table';
 import { Strafcalculator } from './strafcalculator';
 import { BoeteTable } from './boete-table';
 import { Boetecalculator } from './boetecalculator';
+import { KostenTabel } from './kosten-tabel';
 import { ZieOokWetboek } from './zie-ook-wetboek';
 import { WetboekQuiz } from './wetboek-quiz';
 import { Wetstechnischeinformatie } from './wetstechnische-informatie';
@@ -21,6 +22,7 @@ export function getMDXComponents(components?: MDXComponents) {
     Strafcalculator,
     BoeteTable,
     Boetecalculator,
+    KostenTabel,
     ZieOokWetboek,
     WetboekQuiz,
     Wetstechnischeinformatie,

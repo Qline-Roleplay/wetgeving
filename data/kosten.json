@@ -1,0 +1,32 @@
+[
+  { "id": "kosten-ambulance-behandeling", "type": "dienst", "categorie": "ambulance", "naam": "Behandeling ter plaatse", "tarief": { "kind": "bedrag", "bedrag": 150 }, "definitief": false },
+  { "id": "kosten-ambulance-vervoer", "type": "dienst", "categorie": "ambulance", "naam": "Vervoer naar het ziekenhuis", "tarief": { "kind": "bedrag", "bedrag": 250 }, "definitief": false },
+  { "id": "kosten-ambulance-revive", "type": "dienst", "categorie": "ambulance", "naam": "Revive", "tarief": { "kind": "bedrag", "bedrag": 350 }, "definitief": false },
+
+  { "id": "kosten-pechhulp-starten", "type": "dienst", "categorie": "pechhulp", "naam": "Voertuig starten of repareren", "tarief": { "kind": "bedrag", "bedrag": 75 }, "definitief": false },
+  { "id": "kosten-pechhulp-takelen", "type": "dienst", "categorie": "pechhulp", "naam": "Voertuig (weg)takelen", "tarief": { "kind": "bedrag", "bedrag": 150 }, "definitief": false },
+  { "id": "kosten-pechhulp-sloop", "type": "dienst", "categorie": "pechhulp", "naam": "Voertuig ophalen uit de sloop", "tarief": { "kind": "bedrag", "bedrag": 250 }, "definitief": false },
+
+  { "id": "kosten-politie-kenteken", "type": "dienst", "categorie": "politie", "naam": "Kentekenwijziging", "tarief": { "kind": "bedrag", "bedrag": 100 }, "definitief": false },
+  { "id": "kosten-politie-rijbewijs", "type": "dienst", "categorie": "politie", "naam": "Aanvraag of vervanging rijbewijs", "tarief": { "kind": "bedrag", "bedrag": 150 }, "definitief": false },
+  { "id": "kosten-politie-vrijkoop", "type": "dienst", "categorie": "politie", "naam": "Vrijkoop inbeslagname voertuig", "tarief": { "kind": "bedrag", "bedrag": 500 }, "definitief": false },
+
+  { "id": "kosten-vliegschool-lesuur", "type": "dienst", "categorie": "vliegschool", "naam": "Lesuur", "tarief": { "kind": "bedrag", "bedrag": 200 }, "definitief": false },
+  { "id": "kosten-vliegschool-examen", "type": "dienst", "categorie": "vliegschool", "naam": "Examen vliegbrevet", "tarief": { "kind": "bedrag", "bedrag": 400 }, "definitief": false },
+
+  {
+    "id": "belasting-wegenbelasting",
+    "type": "belasting",
+    "categorie": "belasting",
+    "naam": "Wegenbelasting",
+    "eenheid": "per dag",
+    "tiers": [
+      { "minAantal": 1, "maxAantal": 4, "bedrag": 50 },
+      { "minAantal": 5, "maxAantal": 9, "bedrag": 120 },
+      { "minAantal": 10, "maxAantal": 19, "bedrag": 250 },
+      { "minAantal": 20, "maxAantal": null, "bedrag": 500 }
+    ],
+    "definitief": false,
+    "opmerking": "Motorvoertuigenbelasting wordt geheven over motorvoertuigen die in je garage staan. Dienstvoertuigen en fietsen zijn uitgesloten."
+  }
+]

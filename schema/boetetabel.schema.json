@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "boetetabel.schema.json",
+  "title": "Boetetabel",
+  "description": "Boetes en overtredingen die met een boete worden afgehandeld. Bron voor <BoeteTable /> en de boetecalculator.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/entry" },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "overtreding", "categorie", "bedrag"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stabiel, uniek id. Wordt gebruikt als DOM-anchor en in kruisverwijzingen — hernoem niet zonder de verwijzingen te controleren."
+        },
+        "overtreding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "categorie": {
+          "type": "string",
+          "enum": ["verkeer", "openbare-orde"]
+        },
+        "bedrag": { "$ref": "#/$defs/geldwaarde" },
+        "laatst_gewijzigd": {
+          "type": "string",
+          "format": "date",
+          "description": "Optionele per-rij override van de datum. Ontbreekt normaal — de pagina toont de git-afgeleide 'laatst bijgewerkt' datum van het hele bestand (zie src/lib/last-modified.ts)."
+        }
+      }
+    },
+    "geldwaarde": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "bedrag"],
+          "properties": {
+            "kind": { "const": "bedrag" },
+            "bedrag": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "min", "max"],
+          "properties": {
+            "kind": { "const": "bereik" },
+            "min": { "type": "number", "exclusiveMinimum": 0 },
+            "max": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wetboek.schema.json",
+  "title": "Wetboek (celstraf / taakstraf)",
+  "description": "Feiten en hun strafmaat per wet. Bron voor <WetTable wet=\"...\" />, de strafcalculator en <ZieOokWetboek />.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/entry" },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "feit", "wet", "artikel", "straf"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zé0-9]+(-[a-zé0-9]+)*$",
+          "description": "Stabiel, uniek id (kleine letters, cijfers, koppeltekens; incidentele NL-diakriet zoals 'é' toegestaan). Wordt gebruikt als DOM-anchor (getWetboekEntryHref) — hernoem niet zonder kruisverwijzingen te controleren."
+        },
+        "feit": { "type": "string", "minLength": 1 },
+        "wet": {
+          "type": "string",
+          "enum": ["bw", "opw", "gw", "wvw", "wwm", "sr"],
+          "description": "Sleutel naar WETTEN/WET_SLUGS in src/lib/wetboek-data.ts. Bepaalt op welke /wetboek/... pagina de rij verschijnt."
+        },
+        "artikel": { "type": "string", "minLength": 1 },
+        "straf": { "$ref": "#/$defs/strafwaarde" },
+        "laatst_gewijzigd": {
+          "type": "string",
+          "format": "date",
+          "description": "Optionele per-rij override van de datum; ontbreekt normaal (zie boetetabel.schema.json voor dezelfde afspraak)."
+        }
+      }
+    },
+    "strafwaarde": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "maanden"],
+          "properties": {
+            "kind": { "const": "maanden" },
+            "maanden": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "taken"],
+          "properties": {
+            "kind": { "const": "taken" },
+            "taken": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "maanden"],
+          "description": "Agent kiest tussen maanden of taken. Is taken niet gegeven, dan vult de agent dit zelf in bij de strafcalculator.",
+          "properties": {
+            "kind": { "const": "keuze" },
+            "maanden": { "type": "number", "exclusiveMinimum": 0 },
+            "taken": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "label", "factor", "inputLabel"],
+          "description": "Vermenigvuldigingsfactor die pas een concreet aantal maanden oplevert zodra de agent een waarde invult.",
+          "properties": {
+            "kind": { "const": "factor" },
+            "label": { "type": "string", "minLength": 1 },
+            "factor": { "type": "number", "exclusiveMinimum": 0 },
+            "inputLabel": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    }
+  }
+}

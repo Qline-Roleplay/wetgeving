@@ -8,7 +8,8 @@
     "start": "serve out",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
     "postinstall": "fumadocs-mdx",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:data": "node scripts/validate-data.mjs"
   },
   "dependencies": {
     "@orama/orama": "^3.1.18",
@@ -22,6 +23,8 @@
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "@tailwindcss/postcss": "^4.3.2",
     "@types/mdx": "^2.0.14",
     "@types/node": "^26.1.1",
