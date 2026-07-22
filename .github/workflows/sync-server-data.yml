@@ -1,0 +1,52 @@
+name: Sync data to q-base
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout wetgeving
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate data before syncing
+        run: npm run validate:data
+
+      - name: Checkout q-base
+        uses: actions/checkout@v4
+        with:
+          repository: Qline-Roleplay/q-base
+          token: ${{ secrets.Q_BASE_SYNC_TOKEN }}
+          path: q-base
+
+      - name: Copy synced data files
+        run: |
+          DEST="q-base/resources/[core]/q-wetgeving-data/data"
+          cp data/boetetabel.json "$DEST/boetetabel.json"
+          cp data/kosten.json "$DEST/kosten.json"
+
+      - name: Commit and push if changed
+        working-directory: q-base
+        run: |
+          git config user.name "wetgeving-sync[bot]"
+          git config user.email "wetgeving-sync@users.noreply.github.com"
+          git add "resources/[core]/q-wetgeving-data/data/boetetabel.json" "resources/[core]/q-wetgeving-data/data/kosten.json"
+          if git diff --cached --quiet; then
+            echo "No data changes to sync."
+            exit 0
+          fi
+          git commit -m "sync: update boetetabel/kosten data from wetgeving@${GITHUB_SHA::7}"
+          git push origin main
