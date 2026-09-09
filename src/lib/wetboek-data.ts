@@ -23,15 +23,15 @@ export const WET_SLUGS: Record<WetKey, string> = {
 };
 
 export type StrafValue =
-  | { kind: 'maanden'; maanden: number }
-  | { kind: 'taken'; taken: number }
+  | { kind: 'maanden'; maanden: number; note?: string }
+  | { kind: 'taken'; taken: number; note?: string }
   // Agent kiest tussen een vast aantal maanden of taken. Is `taken` niet
   // gegeven, dan is het aantal taken niet vastgelegd en vult de agent dit
   // zelf in bij het gebruik van de calculator.
-  | { kind: 'keuze'; maanden: number; taken?: number }
+  | { kind: 'keuze'; maanden: number; taken?: number; note?: string }
   // Vermenigvuldigingsfactor die pas een concreet aantal maanden oplevert
   // zodra de agent een waarde invult (bijv. het aantal openstaande boetes).
-  | { kind: 'factor'; label: string; factor: number; inputLabel: string };
+  | { kind: 'factor'; label: string; factor: number; inputLabel: string; note?: string };
 
 export interface StrafEntry {
   id: string;
@@ -47,18 +47,21 @@ export interface StrafEntry {
 export const WETBOEK_ENTRIES: StrafEntry[] = wetboekJson as StrafEntry[];
 
 export function formatStraf(straf: StrafValue): string {
-  switch (straf.kind) {
-    case 'maanden':
-      return `${straf.maanden} maanden`;
-    case 'taken':
-      return `${straf.taken} taken`;
-    case 'keuze':
-      return straf.taken !== undefined
-        ? `${straf.maanden} maanden of ${straf.taken} taken`
-        : `${straf.maanden} maanden of taken`;
-    case 'factor':
-      return straf.label;
-  }
+  const text = (() => {
+    switch (straf.kind) {
+      case 'maanden':
+        return `${straf.maanden} maanden`;
+      case 'taken':
+        return `${straf.taken} taken`;
+      case 'keuze':
+        return straf.taken !== undefined
+          ? `${straf.maanden} maanden of ${straf.taken} taken`
+          : `${straf.maanden} maanden of taken`;
+      case 'factor':
+        return straf.label;
+    }
+  })();
+  return straf.note ? `${text} (${straf.note})` : text;
 }
 
 // Rough severity ballpark for the sortable Strafmaat column — mixes maanden

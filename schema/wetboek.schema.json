@@ -39,7 +39,8 @@
           "required": ["kind", "maanden"],
           "properties": {
             "kind": { "const": "maanden" },
-            "maanden": { "type": "number", "exclusiveMinimum": 0 }
+            "maanden": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
           }
         },
         {
@@ -48,7 +49,8 @@
           "required": ["kind", "taken"],
           "properties": {
             "kind": { "const": "taken" },
-            "taken": { "type": "number", "exclusiveMinimum": 0 }
+            "taken": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
           }
         },
         {
@@ -59,7 +61,8 @@
           "properties": {
             "kind": { "const": "keuze" },
             "maanden": { "type": "number", "exclusiveMinimum": 0 },
-            "taken": { "type": "number", "exclusiveMinimum": 0 }
+            "taken": { "type": "number", "exclusiveMinimum": 0 },
+            "note": { "type": "string", "minLength": 1 }
           }
         },
         {
@@ -71,7 +74,8 @@
             "kind": { "const": "factor" },
             "label": { "type": "string", "minLength": 1 },
             "factor": { "type": "number", "exclusiveMinimum": 0 },
-            "inputLabel": { "type": "string", "minLength": 1 }
+            "inputLabel": { "type": "string", "minLength": 1 },
+            "note": { "type": "string", "minLength": 1 }
           }
         }
       ]
