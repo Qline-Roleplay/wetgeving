@@ -38,6 +38,7 @@ export function BoeteTable() {
       <SortableTable<BoeteEntry>
         rows={rows}
         rowId={(entry) => entry.id}
+        rowClassName={() => 'scroll-mt-24 target:bg-fd-primary/10'}
         columns={[
           {
             key: 'overtreding',
